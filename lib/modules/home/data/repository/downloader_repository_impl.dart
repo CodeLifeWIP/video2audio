@@ -33,6 +33,16 @@ class DownloaderRepositoryImpl implements DownloaderRepository {
   }
 
   @override
+  Either<Failure, Stream<String>> downloadAudioFileStream(VideoData videoData, String saveTo, String filename) {
+    try {
+      final result = remoteDataSource.downloadAudioFileStream(videoData, saveTo, filename);
+      return Right(result);
+    } catch (e) {
+      return Left(DownloadFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, bool>> readPermissions() async{
     try{
       final result = await deviceDataSource.hasPermissions();
@@ -75,4 +85,6 @@ class DownloaderRepositoryImpl implements DownloaderRepository {
       return Left(DownloadFailure(e.toString()));
     }
   }
+
+
 }

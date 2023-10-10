@@ -24,6 +24,16 @@ class OnDownloadAudio extends DownloaderEvent{
   List<Object?> get props => [videoData, saveTo, filename];
 }
 
+class OnDownloadAudioWithProgress extends DownloaderEvent{
+  final VideoData videoData;
+  final String saveTo;
+  final String filename;
+  OnDownloadAudioWithProgress(this.videoData, this.saveTo, this.filename);
+
+  @override
+  List<Object?> get props => [videoData, saveTo, filename];
+}
+
 class OnReadPermission extends DownloaderEvent {}
 class OnRequestPermission extends DownloaderEvent {}
 

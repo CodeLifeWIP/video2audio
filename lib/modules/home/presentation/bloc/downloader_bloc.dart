@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:video_to_audio/core/domain/entity/Video.dart';
+import 'package:video_to_audio/modules/home/domain/use_case/download_audio_file_with_progress.dart' as WithProgress;
 import 'package:video_to_audio/modules/home/domain/use_case/get_directory.dart'
     as Get;
 import 'package:video_to_audio/modules/home/domain/use_case/request_permission.dart'
@@ -24,12 +25,14 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
   final Device.RequestPermission _requestPermission;
   final Get.GetDirectory _getDirectory;
   final Close.CloseConnections _closeConnections;
+  final WithProgress.DownloadAudioFileWithProgress _downloadAudioFileWithProgress;
 
   DownloaderBloc(this._getUrlData, this._downloadAudioFile,
-      this._requestPermission, this._getDirectory, this._closeConnections)
+      this._requestPermission, this._getDirectory, this._closeConnections, this._downloadAudioFileWithProgress)
       : super(DownloaderInitial()) {
     on<OnGetUrlData>(_onGetUrlData);
     on<OnDownloadAudio>(_onDownloadAudio);
+    on<OnDownloadAudioWithProgress>(_onDownloadAudioWithProgress);
     on<OnRequestPermission>(_onRequestPermission);
     on<OnGetDirectory>(_onGetDirectory);
     on<OnCloseConnections>(_onCloseConnections);
@@ -56,6 +59,24 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
       emit(AudioDownloadingError(failure.message.toString()));
     }, (data) {
       emit(AudioDownloadingSuccess(data));
+    });
+  }
+
+
+  Future<void> _onDownloadAudioWithProgress(
+      OnDownloadAudioWithProgress event, Emitter<DownloaderState> emit) async {
+    emit(AudioIsDownloading());
+    final result = await _downloadAudioFileWithProgress(
+        WithProgress.Params(event.videoData, event.saveTo, event.filename));
+    result.fold((failure) {
+      emit(AudioDownloadingError(failure.message.toString()));
+    }, (data) async{
+      await emit.forEach(data, onData: (String data) {
+        return AudioDownloadingHasProgress(data);
+      });
+
+      emit(AudioDownloadingSuccess(""));
+
     });
   }
 

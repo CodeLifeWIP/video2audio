@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_to_audio/modules/home/domain/use_case/download_audio_file_with_progress.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:video_to_audio/modules/home/data/data/device_data_source.dart';
 import 'package:video_to_audio/modules/home/data/data/downloader_data_source.dart';
@@ -65,6 +66,10 @@ Future<void> init() async {
       dependsOn: [DownloaderRepository]);
   locator.registerSingletonWithDependencies(() => DownloadAudioFile(locator()),
       dependsOn: [DownloaderRepository]);
+
+  locator.registerSingletonWithDependencies(() => DownloadAudioFileWithProgress(locator()),
+      dependsOn: [DownloaderRepository]);
+
   locator.registerSingletonWithDependencies(() => ReadPermissions(locator()),
       dependsOn: [DownloaderRepository]);
   locator.registerSingletonWithDependencies(() => RequestPermission(locator()),
@@ -87,7 +92,7 @@ Future<void> init() async {
   // Bloc
   locator.registerSingletonWithDependencies(
       () =>
-          DownloaderBloc(locator(), locator(), locator(), locator(), locator()),
+          DownloaderBloc(locator(), locator(), locator(), locator(), locator(), locator()),
       dependsOn: [
         GetUrlData,
         DownloadAudioFile,

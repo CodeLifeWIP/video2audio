@@ -39,8 +39,6 @@ class _GetUrlDataState extends State<GetUrlData> {
     return BlocListener<DownloaderBloc, DownloaderState>(
       listener: (context, state) {
 
-        log("STATE: ${state.toString()}");
-
         if (state is LoadingStart) {
           AlertLoading.show(context);
 
@@ -221,7 +219,10 @@ class _GetUrlDataState extends State<GetUrlData> {
 
   _downloadAudio() {
     if (_directory!.isNotEmpty && _videoData != null) {
-      context.read<DownloaderBloc>().add(OnDownloadAudio(_videoData!,
+      // context.read<DownloaderBloc>().add(OnDownloadAudio(_videoData!,
+      //     _directory!, _createValidFilename(_videoData!.videoId!.toString())));
+
+      context.read<DownloaderBloc>().add(OnDownloadAudioWithProgress(_videoData!,
           _directory!, _createValidFilename(_videoData!.videoId!.toString())));
     } else {
       Setting.navigateTo(context);

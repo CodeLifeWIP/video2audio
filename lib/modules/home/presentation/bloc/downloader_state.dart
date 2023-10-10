@@ -46,6 +46,14 @@ class AudioDownloadingSuccess extends DownloaderState {
   List<Object?> get props => [message];
 }
 
+class AudioDownloadingHasProgress extends DownloaderState {
+  final String message;
+  AudioDownloadingHasProgress(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class HasNoPermission extends DownloaderState {}
 class HasPermission extends DownloaderState {}
 
