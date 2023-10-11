@@ -17,7 +17,7 @@ class SettingDataSourceImpl implements SettingDataSource{
   @override
   Future<bool> hasPermissions() async{
     try{
-      return await Permission.manageExternalStorage.isGranted;
+      return await Permission.mediaLibrary.isGranted;
     }catch (e) {
       throw const DeviceException("Has permission excetption");
     }
@@ -27,7 +27,7 @@ class SettingDataSourceImpl implements SettingDataSource{
   Future<bool> requestPermissions() async{
     try{
       Map<Permission, PermissionStatus> statuses = await [
-        Permission.manageExternalStorage,
+        Permission.mediaLibrary,
       ].request();
 
       return true;
