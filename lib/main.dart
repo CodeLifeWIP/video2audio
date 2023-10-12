@@ -7,11 +7,12 @@ import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.da
 import 'package:video_to_audio/modules/home/presentation/screens/home.dart';
 import 'package:video_to_audio/modules/settings/presentation/bloc/setting_bloc.dart';
 import 'core/injection.dart' as di;
+import 'firebase_options.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
