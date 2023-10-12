@@ -66,11 +66,13 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
   Future<void> _onDownloadAudioWithProgress(
       OnDownloadAudioWithProgress event, Emitter<DownloaderState> emit) async {
     emit(AudioIsDownloading());
-    final result = await _downloadAudioFileWithProgress(
+    final result = _downloadAudioFileWithProgress(
         WithProgress.Params(event.videoData, event.saveTo, event.filename));
-    result.fold((failure) {
+
+    await result.fold((failure) {
       emit(AudioDownloadingError(failure.message.toString()));
     }, (data) async{
+
       await emit.forEach(data, onData: (String data) {
         return AudioDownloadingHasProgress(data);
       });

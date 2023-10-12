@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:sanitize_filename/sanitize_filename.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:video_to_audio/core/domain/entity/Video.dart';
 import 'package:video_to_audio/core/error/exception.dart';
@@ -71,16 +72,8 @@ class DownloaderDataSourceImpl implements DownloaderDataSource {
       final audio = streams.first;
       final audioStream = client.videos.streamsClient.get(audio);
 
-      // Compose the file name removing the unallowed characters in windows.
-      final fileName = '${video.title}.${audio.container.name}'
-          .replaceAll(r'\', '')
-          .replaceAll('/', '')
-          .replaceAll('*', '')
-          .replaceAll('?', '')
-          .replaceAll('"', '')
-          .replaceAll('<', '')
-          .replaceAll('>', '')
-          .replaceAll('|', '');
+      // Compose the file name removing the not allowed characters in windows.
+      final fileName = sanitizeFilename('${video.title}.${audio.container.name}', replacement: '_');
 
       var file = File("$saveTo/$fileName");
 
@@ -107,20 +100,17 @@ class DownloaderDataSourceImpl implements DownloaderDataSource {
         // Keep track of the current downloaded data.
         count += data.length;
 
-        // Calculate the current progress.
-        final progress = ((count / len) * 100).ceil();
-        // log("Progress: $progress");
-        yield progress.toString();
-
-        // Update the progressbar.
-        // progressBar.update(progress);
-
         // Write to file.
         output.add(data);
+
+        // Calculate the current progress.
+        final progress = ((count / len) * 100).ceil();
+
+        // Update the progressbar.
+        yield progress.toString();
       }
       await output.close();
       // return "Downloaded to ${file.path}";
-
       // throw const DownloadException("");
 
     } catch (e) {
