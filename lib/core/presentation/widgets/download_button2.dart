@@ -133,7 +133,6 @@ class ButtonShapeWidget extends StatelessWidget {
       duration: transitionDuration,
       curve: Curves.ease,
       width: isDownloading || isFetching ? 30 : wideIconSize,
-      height: 30,
       decoration: shape,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
@@ -142,7 +141,6 @@ class ButtonShapeWidget extends StatelessWidget {
           opacity: isDownloading || isFetching ? 0.0 : 1.0,
           curve: Curves.ease,
           child: Text(
-            // isDownloaded ? 'OPEN' : 'GET',
             isDownloaded ? 'Done' : 'GET',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -177,7 +175,6 @@ class ProgressIndicatorWidget extends StatelessWidget {
         tween: Tween(begin: 0, end: downloadProgress == 100 ? 1.0 : (downloadProgress/100)),
         duration: const Duration(milliseconds: 200),
         builder: (context, progress, child) {
-
           return CircularProgressIndicator(
             backgroundColor: isDownloading
                 ? CupertinoColors.lightBackgroundGray
