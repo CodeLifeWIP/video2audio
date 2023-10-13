@@ -129,12 +129,12 @@ class _GetUrlDataState extends State<GetUrlData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: UIConst.textLight,
-              hintText: "Search",
+              hintText: "Link goes here",
               hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: UIConst.textMid,
                   ),
               prefixIcon: Icon(
-                Icons.search,
+                Icons.link_sharp,
                 color: UIConst.textMid,
               ),
               suffixIcon: _urlTextController.text.isNotEmpty
