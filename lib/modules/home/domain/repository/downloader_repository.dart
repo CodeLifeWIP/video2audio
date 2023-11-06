@@ -9,5 +9,6 @@ abstract class DownloaderRepository {
   Future<Either<Failure, bool>> readPermissions();
   Future<Either<Failure, bool>> requestPermissions();
   Future<Either<Failure, String>> getDirectory();
+  Future<Either<Failure, void>> openDownloadedFile(String directory, String filename);
   Future<Either<Failure, void>> closeConnections();
 }

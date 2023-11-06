@@ -109,8 +109,6 @@ class ButtonShapeWidget extends StatelessWidget {
   final bool isFetching;
   final Duration transitionDuration;
 
-
-
   @override
   Widget build(BuildContext context) {
     var shape = const ShapeDecoration(
@@ -141,7 +139,7 @@ class ButtonShapeWidget extends StatelessWidget {
           opacity: isDownloading || isFetching ? 0.0 : 1.0,
           curve: Curves.ease,
           child: Text(
-            isDownloaded ? 'Done' : 'GET',
+            isDownloaded ? 'Open' : 'GET',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.bold,

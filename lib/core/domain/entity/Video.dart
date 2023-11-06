@@ -69,10 +69,12 @@ class AudioManifest extends Equatable {
   final String? audioCodec;
   final String? qualityLabel;
 
-  const AudioManifest({this.url, this.sizes, this.audioCodec, this.qualityLabel});
+  final String? filename;
+
+  const AudioManifest({this.url, this.sizes, this.audioCodec, this.qualityLabel, this.filename});
 
   @override
-  List<Object?> get props => [url, sizes, audioCodec, qualityLabel];
+  List<Object?> get props => [url, sizes, audioCodec, qualityLabel, filename];
 }
 
 class Sizes extends Equatable {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:video_to_audio/core/domain/entity/Video.dart';
 import 'package:video_to_audio/core/presentation/theme/ui_const.dart';
 import 'package:video_to_audio/core/presentation/widgets/custom_error_message.dart';
@@ -191,6 +192,11 @@ class _GetUrlDataState extends State<GetUrlData> {
             _askForPermissions();
           }
         },
+        onTapOpen: () async{
+          if(_directory.isNotEmpty) {
+            _openDownloadedFile();
+          }
+        },
       );
     } else {
       return const SizedBox();
@@ -199,10 +205,6 @@ class _GetUrlDataState extends State<GetUrlData> {
 
   bool _validateUrl(String? value) {
     return Uri.parse(value!).isAbsolute;
-  }
-
-  String _createValidFilename(String videoName) {
-    return videoName;
   }
 
   void _getUrlData(String url) {
@@ -218,15 +220,16 @@ class _GetUrlDataState extends State<GetUrlData> {
   }
 
   _downloadAudio() {
-    if (_directory!.isNotEmpty && _videoData != null) {
-      // context.read<DownloaderBloc>().add(OnDownloadAudio(_videoData!,
-      //     _directory!, _createValidFilename(_videoData!.videoId!.toString())));
 
+    if (_directory.isNotEmpty && _videoData != null) {
       context.read<DownloaderBloc>().add(OnDownloadAudioWithProgress(_videoData!,
-          _directory!, _createValidFilename(_videoData!.videoId!.toString())));
+          _directory, _videoData!.audioManifest!.filename!));
     } else {
       Setting.navigateTo(context);
     }
   }
 
+  _openDownloadedFile() {
+    context.read<DownloaderBloc>().add(OnOpenDownloadedFile(directory: _directory, filename: _videoData!.audioManifest!.filename!));
+  }
 }

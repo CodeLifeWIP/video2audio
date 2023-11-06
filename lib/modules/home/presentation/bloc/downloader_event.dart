@@ -38,6 +38,16 @@ class OnReadPermission extends DownloaderEvent {}
 class OnRequestPermission extends DownloaderEvent {}
 
 class OnGetDirectory extends DownloaderEvent {}
+class OnOpenDownloadedFile extends DownloaderEvent {
+  final String directory;
+  final String filename;
+
+  OnOpenDownloadedFile({required this.directory, required this.filename});
+
+  @override
+  List<Object?> get props => [directory, filename];
+}
+
 
 class OnCloseConnections extends DownloaderEvent {}
 

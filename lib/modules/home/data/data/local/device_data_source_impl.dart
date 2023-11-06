@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:lecle_downloads_path_provider/constants/downloads_directory_type.dart';
 import 'package:lecle_downloads_path_provider/lecle_downloads_path_provider.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_to_audio/core/error/exception.dart';
@@ -52,6 +53,15 @@ class DeviceDataSourceImpl implements DeviceDataSource{
       return downloadsDirectory!.path;
     }catch(e){
     throw const DeviceException("Default directory exception");
+    }
+  }
+
+  @override
+  Future<void> openDownloadedFile(String directory, String filename) async{
+    try{
+      await OpenFilex.open('$directory/$filename');
+    }catch(e){
+      throw const DeviceException("Default directory exception");
     }
   }
 

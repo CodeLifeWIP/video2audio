@@ -17,12 +17,10 @@ class DownloaderDataSourceImpl implements DownloaderDataSource {
   Future<VideoDataModel> getUrlData(String url) async {
     try {
       var video = await client.videos.get(url);
-      var streamManifest =
-          await client.videos.streamsClient.getManifest(video.id);
+      var streamManifest =  await client.videos.streamsClient.getManifest(video.id);
 
       var videoDataModel = VideoDataModel.fromYoutubeExplodeVideo(video);
-      videoDataModel.audioStreamData =
-          AudioStreamData.fromYoutubeExplodeStreamManifest(streamManifest);
+      videoDataModel.audioStreamData = AudioStreamData.fromYoutubeExplodeStreamManifest(streamManifest, videoDataModel.title ?? DateTime.now().toString());
 
       return videoDataModel;
     } catch (e) {
@@ -65,18 +63,18 @@ class DownloaderDataSourceImpl implements DownloaderDataSource {
       final video = await client.videos.get(videoData.url);
 
       // Get the video manifest.
-      final manifest = await client.videos.streamsClient.getManifest(video.id);
-      final streams = manifest.audioOnly;
+      final streamManifest = await client.videos.streamsClient.getManifest(video.id);
+      final streams = streamManifest.audioOnly;
 
       // Get the audio track with the highest bitrate.
       final audio = streams.first;
       final audioStream = client.videos.streamsClient.get(audio);
 
       // Compose the file name removing the not allowed characters in windows.
-      final fileName = sanitizeFilename('${video.title}.${audio.container.name}', replacement: '_');
+      // final fileName = sanitizeFilename('${video.title}.${audio.container.name}', replacement: '_');
 
-      var file = File("$saveTo/$fileName");
-
+      var file = File("$saveTo/$filename");
+      log(file.toString());
       // Delete the file if exists.
       if (file.existsSync()) {
         file.deleteSync();
@@ -126,4 +124,6 @@ class DownloaderDataSourceImpl implements DownloaderDataSource {
       throw const DownloadException("Close connection exception");
     }
   }
+
+
 }
