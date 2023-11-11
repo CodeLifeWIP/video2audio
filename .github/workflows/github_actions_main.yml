@@ -17,6 +17,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.9'
+      - run: flutter pub get
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.2
@@ -26,10 +27,9 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Echo Folder Contents
         run: echo $(ls)
-#      - run: flutter pub get
-#      - name: Build .aab
-#        run: flutter build appbundle
-#        env:
-#          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-#          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-#          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      - name: Build .aab
+        run: flutter build appbundle
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
