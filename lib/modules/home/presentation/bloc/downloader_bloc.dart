@@ -7,6 +7,7 @@ import 'package:video_to_audio/core/domain/entity/Video.dart';
 import 'package:video_to_audio/modules/home/domain/use_case/download_audio_file_with_progress.dart' as WithProgress;
 import 'package:video_to_audio/modules/home/domain/use_case/get_directory.dart'
     as Get;
+import 'package:video_to_audio/modules/home/domain/use_case/open_downloaded_file.dart' as Open;
 import 'package:video_to_audio/modules/home/domain/use_case/request_permission.dart'
     as Device;
 import 'package:video_to_audio/modules/home/domain/use_case/download_audio_file.dart'
@@ -24,18 +25,32 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
   final Download.DownloadAudioFile _downloadAudioFile;
   final Device.RequestPermission _requestPermission;
   final Get.GetDirectory _getDirectory;
+  final Open.OpenDownloadedFile _openDownloadedFile;
   final Close.CloseConnections _closeConnections;
   final WithProgress.DownloadAudioFileWithProgress _downloadAudioFileWithProgress;
 
   DownloaderBloc(this._getUrlData, this._downloadAudioFile,
-      this._requestPermission, this._getDirectory, this._closeConnections, this._downloadAudioFileWithProgress)
+      this._requestPermission, this._getDirectory, this._closeConnections, this._downloadAudioFileWithProgress, this._openDownloadedFile)
       : super(DownloaderInitial()) {
     on<OnGetUrlData>(_onGetUrlData);
     on<OnDownloadAudio>(_onDownloadAudio);
     on<OnDownloadAudioWithProgress>(_onDownloadAudioWithProgress);
     on<OnRequestPermission>(_onRequestPermission);
     on<OnGetDirectory>(_onGetDirectory);
+    on<OnOpenDownloadedFile>(_onOpenDownloadedFile);
     on<OnCloseConnections>(_onCloseConnections);
+  }
+
+  Future<void> _onOpenDownloadedFile(
+      OnOpenDownloadedFile event, Emitter<DownloaderState> emit) async {
+    emit(LoadingStart());
+    final result = await _openDownloadedFile(Open.Params(event.directory, event.filename));
+    result.fold((failure) {
+      emit(OpenFileFailed());
+    }, (data) {
+      emit(OpenFileSuccess());
+    });
+    emit(LoadingStop());
   }
 
   Future<void> _onGetUrlData(
@@ -66,6 +81,7 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
   Future<void> _onDownloadAudioWithProgress(
       OnDownloadAudioWithProgress event, Emitter<DownloaderState> emit) async {
     emit(AudioIsDownloading());
+
     final result = _downloadAudioFileWithProgress(
         WithProgress.Params(event.videoData, event.saveTo, event.filename));
 
@@ -77,7 +93,7 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
         return AudioDownloadingHasProgress(data);
       });
 
-      emit(AudioDownloadingSuccess(""));
+      emit(AudioDownloadingSuccess(event.saveTo));
 
     });
   }

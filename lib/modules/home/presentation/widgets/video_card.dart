@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_to_audio/core/domain/entity/Video.dart';
@@ -9,9 +11,10 @@ import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.da
 class VideoCard extends StatefulWidget {
   final VideoData videoData;
   final VoidCallback onTapDownload;
+  final VoidCallback onTapOpen;
 
   const VideoCard(
-      {Key? key, required this.videoData, required this.onTapDownload})
+      {Key? key, required this.videoData, required this.onTapDownload, required this.onTapOpen})
       : super(key: key);
 
   @override
@@ -88,9 +91,7 @@ class _VideoCardState extends State<VideoCard> {
                                 downloadProgress: progress,
                                 onDownload: widget.onTapDownload,
                                 onCancel: () {},
-                                onOpen: () {
-                                  Navigator.pop(context);
-                                },
+                                onOpen: widget.onTapOpen,
                               );
 
                             },

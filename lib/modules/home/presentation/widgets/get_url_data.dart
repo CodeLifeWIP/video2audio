@@ -6,9 +6,13 @@ import 'package:video_to_audio/core/presentation/theme/ui_const.dart';
 import 'package:video_to_audio/core/presentation/widgets/custom_error_message.dart';
 import 'package:video_to_audio/core/presentation/widgets/loading_popup.dart';
 import 'package:video_to_audio/core/presentation/widgets/spacers/horizontal_spacers.dart';
-import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.dart';
 import 'package:video_to_audio/modules/home/presentation/widgets/video_card.dart';
+
+import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.dart' as downloader;
+import 'package:video_to_audio/modules/settings/presentation/bloc/setting_bloc.dart' as setting;
 import 'package:video_to_audio/modules/settings/presentation/screens/setting.dart';
+
+
 
 class GetUrlData extends StatefulWidget {
   const GetUrlData({Key? key}) : super(key: key);
@@ -36,76 +40,85 @@ class _GetUrlDataState extends State<GetUrlData> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DownloaderBloc, DownloaderState>(
-      listener: (context, state) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<downloader.DownloaderBloc, downloader.DownloaderState>(
+          listener: (context, state) {
+            if (state is downloader.LoadingStart) {
+              AlertLoading.show(context);
 
-        if (state is LoadingStart) {
-          AlertLoading.show(context);
+              setState(() {
+                _videoData = null;
+                _errorMessage = '';
+              });
+            }
 
-          setState(() {
-            _videoData = null;
-            _errorMessage = '';
-          });
-        }
+            if (state is downloader.LoadingStop) {
+              AlertLoading.hide(context);
+            }
 
-        if (state is LoadingStop) {
-          AlertLoading.hide(context);
-        }
+            if (state is downloader.HasVideoData) {
+              setState(() {
+                _videoData = state.videoData;
+              });
 
-        if (state is HasVideoData) {
-          setState(() {
-            _videoData = state.videoData;
-          });
+              Future.delayed(const Duration(seconds: 0)).then((_) {
+                _showBottomSheet(state.videoData);
+              });
+            }
 
-          Future.delayed(const Duration(seconds: 0)).then((_) {
-            _showBottomSheet(state.videoData);
-          });
-        }
+            if (state is downloader.AudioDownloadingSuccess) {
+              setState(() {
+                _errorMessage = '';
+              });
+            }
 
-        if(state is AudioDownloadingSuccess){
-          setState(() {
-            _errorMessage = '';
-          });
-        }
+            if (state is downloader.NoVideoData) {
+              setState(() {
+                _videoData = null;
+              });
+            }
 
-        if (state is NoVideoData) {
-          setState(() {
-            _videoData = null;
-          });
-        }
+            if (state is downloader.HasPermission) {
+              setState(() {
+                _hasPermissions = true;
+              });
+              _downloadAudio();
+            }
 
+            if (state is downloader.HasDirectoryData) {
+              setState(() {
+                _directory = state.directory;
+              });
+            }
 
-        if (state is HasPermission) {
-          setState(() {
-            _hasPermissions = true;
-          });
-          _downloadAudio();
-        }
+            if (state is downloader.DownloaderError) {
+              setState(() {
+                _errorMessage = state.error.toString();
+              });
+            }
 
-        if (state is HasDirectoryData) {
-          setState(() {
-            _directory = state.directory;
-          });
-        }
+            if (state is downloader.AudioDownloadingError) {
+              setState(() {
+                _errorMessage = state.error.toString();
+              });
+            }
 
-        if (state is DownloaderError) {
-          setState(() {
-            _errorMessage = state.error.toString();
-          });
-        }
-
-        if (state is AudioDownloadingError) {
-          setState(() {
-            _errorMessage = state.error.toString();
-          });
-        }
-
-        if (state is DirectoryError) {
-          setState(() {
-            _errorMessage = state.error.toString();
-          });
-        }
-      },
+            if (state is downloader.DirectoryError) {
+              setState(() {
+                _errorMessage = state.error.toString();
+              });
+            }
+          },
+        ),
+        BlocListener<setting.SettingBloc, setting.SettingState>(
+          listener: (context, state) {
+            if (state is setting.HasDirectoryData) {
+              _getSaveDirectory();
+            }
+          },
+        ),
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -129,12 +142,12 @@ class _GetUrlDataState extends State<GetUrlData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: UIConst.textLight,
-              hintText: "Search",
+              hintText: "Link goes here",
               hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: UIConst.textMid,
                   ),
               prefixIcon: Icon(
-                Icons.search,
+                Icons.link_sharp,
                 color: UIConst.textMid,
               ),
               suffixIcon: _urlTextController.text.isNotEmpty
@@ -156,7 +169,9 @@ class _GetUrlDataState extends State<GetUrlData> {
             onFieldSubmitted: (str) =>
                 str.isNotEmpty && _validateUrl(str) ? _getUrlData(str) : null,
           ),
-          CustomErrorMessage(message: _errorMessage,),
+          CustomErrorMessage(
+            message: _errorMessage,
+          ),
         ],
       ),
     );
@@ -191,6 +206,11 @@ class _GetUrlDataState extends State<GetUrlData> {
             _askForPermissions();
           }
         },
+        onTapOpen: () async {
+          if (_directory.isNotEmpty) {
+            _openDownloadedFile();
+          }
+        },
       );
     } else {
       return const SizedBox();
@@ -201,32 +221,29 @@ class _GetUrlDataState extends State<GetUrlData> {
     return Uri.parse(value!).isAbsolute;
   }
 
-  String _createValidFilename(String videoName) {
-    return videoName;
-  }
-
   void _getUrlData(String url) {
-    context.read<DownloaderBloc>().add(OnGetUrlData(url));
+    context.read<downloader.DownloaderBloc>().add(downloader.OnGetUrlData(url));
   }
 
   _askForPermissions() {
-    context.read<DownloaderBloc>().add(OnRequestPermission());
+    context.read<downloader.DownloaderBloc>().add(downloader.OnRequestPermission());
   }
 
   _getSaveDirectory() {
-    context.read<DownloaderBloc>().add(OnGetDirectory());
+    context.read<downloader.DownloaderBloc>().add(downloader.OnGetDirectory());
   }
 
   _downloadAudio() {
-    if (_directory!.isNotEmpty && _videoData != null) {
-      // context.read<DownloaderBloc>().add(OnDownloadAudio(_videoData!,
-      //     _directory!, _createValidFilename(_videoData!.videoId!.toString())));
-
-      context.read<DownloaderBloc>().add(OnDownloadAudioWithProgress(_videoData!,
-          _directory!, _createValidFilename(_videoData!.videoId!.toString())));
+    if (_directory.isNotEmpty && _videoData != null) {
+      context.read<downloader.DownloaderBloc>().add(downloader.OnDownloadAudioWithProgress(
+          _videoData!, _directory, _videoData!.audioManifest!.filename!));
     } else {
       Setting.navigateTo(context);
     }
   }
 
+  _openDownloadedFile() {
+    context.read<downloader.DownloaderBloc>().add(downloader.OnOpenDownloadedFile(
+        directory: _directory, filename: _videoData!.audioManifest!.filename!));
+  }
 }

@@ -86,5 +86,15 @@ class DownloaderRepositoryImpl implements DownloaderRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, void>> openDownloadedFile(String directory, String filename) async{
+    try{
+      await deviceDataSource.openDownloadedFile(directory, filename);
+      return const Right(null);
+    }catch (e) {
+      return Left(DownloadFailure(e.toString()));
+    }
+  }
+
 
 }

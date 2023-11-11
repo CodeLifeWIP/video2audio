@@ -74,4 +74,8 @@ class HasDirectoryData extends DownloaderState {
   List<Object?> get props => [directory];
 }
 
+class OpenFileSuccess extends DownloaderState {}
+class OpenFileFailed extends DownloaderState {}
+
+
 
