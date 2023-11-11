@@ -25,10 +25,8 @@ jobs:
           fileName: 'upload_keystore.jks'
           fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Transfer folder
-        run: cd /home/runner/work/video2audio/video2audio/android/app/keystore/
       - name: Echo Folder Contents
-        run: echo $(ls)
+        run: echo ls ${{"https://www.youtube.com/shorts/bvSfvrYdVC8" }
       #      - run: flutter pub get
       #      - name: Build .aab
       #        run: flutter build appbundle
