@@ -17,16 +17,14 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.9'
-      - run: flutter pub get
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'upload_keystore.jks'
-          fileDir: 'keystore/'
+          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Echo Folder Contents
-        run: echo $(ls)
+      - run: flutter pub get
       - name: Build .aab
         run: flutter build appbundle
         env:
