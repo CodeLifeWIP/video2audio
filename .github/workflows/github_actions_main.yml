@@ -22,7 +22,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'upload_keystore.jks'
-          fileDir: '/home/runner/work/video2audio/video2audio/app/keystore/'
+          fileDir: 'keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Echo Folder Contents
         run: echo $(ls)
