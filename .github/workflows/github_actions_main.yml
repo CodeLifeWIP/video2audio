@@ -25,10 +25,12 @@ jobs:
           fileName: 'upload_keystore.jks'
           fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
-      - run: flutter pub get
-      - name: Build .aab
-        run: flutter build appbundle
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      - name: Echo Folder Contents
+        run: echo $(ls)
+      #      - run: flutter pub get
+      #      - name: Build .aab
+      #        run: flutter build appbundle
+      #        env:
+      #          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      #          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      #          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
