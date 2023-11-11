@@ -1,0 +1,14 @@
+# The name of the workflow
+name: first-test
+
+# The event that triggers the workflow
+on: [push]
+
+jobs:
+  analysis:
+    # The name of the job
+    name: example
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Folder Contents
+        run: echo $(ls)
