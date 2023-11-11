@@ -26,7 +26,7 @@ jobs:
           fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: 'Check File Existence'
-        uses: thebinaryfelix/check-file-existence-action@v1
+        uses: thebinaryfelix/check-file-existence-action@1.0.0
         with:
           files: 'upload_keystore.jks, *.jks'
       #      - run: flutter pub get
