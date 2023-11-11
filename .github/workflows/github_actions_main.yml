@@ -26,7 +26,7 @@ jobs:
           fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Echo Folder Contents
-        run: echo ls ${{"https://www.youtube.com/shorts/bvSfvrYdVC8" }
+        run: echo ls ${{ github.workspace }}
       #      - run: flutter pub get
       #      - name: Build .aab
       #        run: flutter build appbundle
