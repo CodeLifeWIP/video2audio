@@ -10,39 +10,43 @@ jobs:
     name: example
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-java@v2
-#        with:
-#          distribution: 'zulu'
-#          java-version: '11'
-#      - uses: subosito/flutter-action@v2
-#        with:
-#          flutter-version: '3.13.9'
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1.2
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name:  Setup Java
+        uses: actions/setup-java@v2
         with:
-          fileName: 'upload-keystore.jks'
-          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
-          encodedString: ${{ secrets.KEYSTORE }}
-      - name: 'Manual File Check txt'
-        run: | 
-            echo "hello" > testing.txt
-            echo -l /home/runner/work/video2audio/video2audio/android/app/testing.txt
-      - name: 'Manual File Check jks'
-        run: echo -l /home/runner/work/video2audio/video2audio/android/app/keystore/upload-keystore.jks
-      - name: 'Check File Existence 1'
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.9'
+      - name: Get Flutter Resources
+        run: flutter pub get
+      - name: Build App Bundle
+        run: flutter build appbundle
+      - name: 'Check File Existence'
         uses: thebinaryfelix/check-file-existence-action@1.0.0
         with:
-          files: 'testing.txt'
-      - name: 'Check File Existence 2'
-        uses: thebinaryfelix/check-file-existence-action@1.0.0
-        with:
-          files: 'upload-keystore.jks'
-      #      - run: flutter pub get
-      #      - name: Build .aab
-      #        run: flutter build appbundle
-      #        env:
-      #          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      #          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      #          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          files: 'app-release.aab'
+
+
+
+#      - run: flutter pub get
+#      - name: Build .aab
+#        run: flutter build appbundle
+#        env:
+#          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+#      - name: Decode Keystore
+#        id: decode_keystore
+#        uses: timheuer/base64-to-file@v1.2
+#        with:
+#          fileName: 'upload-keystore.jks'
+#          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
+#          encodedString: ${{ secrets.KEYSTORE }}
+#      - name: 'Check File Existence'
+#        uses: thebinaryfelix/check-file-existence-action@1.0.0
+#        with:
+#          files: 'upload-keystore.jks'
