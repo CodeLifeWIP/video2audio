@@ -69,7 +69,7 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias'] ? keystoreProperties['keyAlias'] : System.getenv("KEY_ALIAS")
             keyPassword keystoreProperties['keyPassword'] ? keystoreProperties['keyPassword'] : System.getenv("KEY_PASSWORD")
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : file("keystore/upload_keystore.jks")
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : file("keystore/upload-keystore.jks")
             storePassword keystoreProperties['storePassword'] ? keystoreProperties['storePassword'] : System.getenv("KEYSTORE_PASSWORD")
 
         }

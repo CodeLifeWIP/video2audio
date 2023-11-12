@@ -18,19 +18,17 @@ jobs:
 #      - uses: subosito/flutter-action@v2
 #        with:
 #          flutter-version: '3.13.9'
-#      - name: Decode Keystore
-#        id: decode_keystore
-#        uses: timheuer/base64-to-file@v1.2
-#        with:
-#          fileName: 'upload_keystore.jks'
-#          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
-#          encodedString: ${{ secrets.KEYSTORE }}
-      - name: 'create text file'
-        run: echo "hello" > upload_keystore.jks
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'upload-keystore.jks'
+          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
+          encodedString: ${{ secrets.KEYSTORE }}
       - name: 'Check File Existence'
         uses: thebinaryfelix/check-file-existence-action@1.0.0
         with:
-          files: 'upload_keystore.jks'
+          files: 'upload-keystore.jks'
       #      - run: flutter pub get
       #      - name: Build .aab
       #        run: flutter build appbundle
