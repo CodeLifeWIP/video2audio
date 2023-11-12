@@ -25,6 +25,18 @@ jobs:
         run: flutter pub get
       - name: Build App Bundle
         run: flutter build appbundle
+      - name: Sign App Bundle
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: build/app/outputs/bundle/release/
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+
+
       - name: 'Check File Existence'
         uses: thebinaryfelix/check-file-existence-action@1.0.0
         with:
