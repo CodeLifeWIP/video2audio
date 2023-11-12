@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: signed-app-bundle
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          path: ${{steps.signed_aab.outputs.signedReleaseFile}}
 #      - name: Upload to Play Store (Internal Testing)
 #        uses: r0adkll/upload-google-play@v1.0.18
 #        with:
