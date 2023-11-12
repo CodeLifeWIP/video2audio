@@ -25,7 +25,11 @@ jobs:
           fileName: 'upload-keystore.jks'
           fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: 'Manual File Check'
+      - name: 'Manual File Check txt'
+        run: | 
+            echo "hello" > testing.txt
+            echo -l /home/runner/work/video2audio/video2audio/android/app/testing.txt
+      - name: 'Manual File Check jks'
         run: echo -l /home/runner/work/video2audio/video2audio/android/app/keystore/upload-keystore.jks
       - name: 'Check File Existence'
         uses: thebinaryfelix/check-file-existence-action@1.0.0
