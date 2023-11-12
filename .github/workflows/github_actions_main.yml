@@ -2,7 +2,7 @@
 name: first-test
 
 # The event that triggers the workflow
-on: [push]
+on: [ push ]
 
 jobs:
   analysis:
@@ -12,11 +12,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-#      - name:  Setup Java
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'zulu'
-#          java-version: '11'
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -27,13 +22,27 @@ jobs:
         run: flutter build appbundle
       - name: Sign App Bundle
         uses: r0adkll/sign-android-release@v1
-        id: sign_app
+        id: signed_aab
         with:
           releaseDirectory: build/app/outputs/bundle/release/
           signingKeyBase64: ${{ secrets.KEYSTORE }}
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Upload Signed App Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: signed-app-bundle
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+#      - name: Upload to Play Store (Internal Testing)
+#        uses: r0adkll/upload-google-play@v1.0.18
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
+#          packageName: com.mangotechnologies.video_to_audio
+#          releaseFiles: ${{steps.signed_aab.outputs.signedReleaseFile}}
+#          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
+#          track: internal
+
 
 
 
