@@ -31,7 +31,11 @@ jobs:
             echo -l /home/runner/work/video2audio/video2audio/android/app/testing.txt
       - name: 'Manual File Check jks'
         run: echo -l /home/runner/work/video2audio/video2audio/android/app/keystore/upload-keystore.jks
-      - name: 'Check File Existence'
+      - name: 'Check File Existence 1'
+        uses: thebinaryfelix/check-file-existence-action@1.0.0
+        with:
+          files: 'testing.txt'
+      - name: 'Check File Existence 2'
         uses: thebinaryfelix/check-file-existence-action@1.0.0
         with:
           files: 'upload-keystore.jks'
