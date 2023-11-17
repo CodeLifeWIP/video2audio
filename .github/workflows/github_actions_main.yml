@@ -43,6 +43,7 @@ jobs:
           mappingFile: ./build/app/outputs/mapping/release/mapping.txt
           track: internal
 
+
 #      - run: flutter pub get
 #      - name: Build .aab
 #        run: flutter build appbundle
