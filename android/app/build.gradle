@@ -80,7 +80,8 @@ android {
             // commented for github actions signing
             //signingConfig signingConfigs.release
             ndk {
-                debugSymbolLevel 'SYMBOL_TABLE'
+//                debugSymbolLevel 'SYMBOL_TABLE'
+                debugSymbolLevel 'FULL'
             }
         }
     }
