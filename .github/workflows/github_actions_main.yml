@@ -19,7 +19,7 @@ jobs:
       - name: Get Flutter Resources
         run: flutter pub get
       - name: Build App Bundle
-        run: flutter build appbundle
+        run: flutter build appbundle --split-debug-info=build/app/outputs/symbols
       - name: Sign App Bundle
         uses: r0adkll/sign-android-release@v1
         id: signed_aab
@@ -34,15 +34,20 @@ jobs:
         with:
           name: signed-app-bundle
           path: ${{steps.signed_aab.outputs.signedReleaseFile}}
-      - name: Upload to Play Store (Internal Testing)
-        uses: r0adkll/upload-google-play@v1.0.18
+      - name: Upload Debug Symbols
+        uses: actions/upload-artifact@v3
         with:
-          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
-          packageName: com.mangotechnologies.video_to_audio
-          releaseFiles: ${{steps.signed_aab.outputs.signedReleaseFile}}
-          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
-          changesNotSentForReview: true
-          track: internal
+          name: debug-symbols
+          path: ${{steps.signed_aab.outputs.symbols}}
+#      - name: Upload to Play Store (Internal Testing)
+#        uses: r0adkll/upload-google-play@v1.0.18
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
+#          packageName: com.mangotechnologies.video_to_audio
+#          releaseFiles: ${{steps.signed_aab.outputs.signedReleaseFile}}
+#          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
+#          changesNotSentForReview: true
+#          track: internal
 
 
 

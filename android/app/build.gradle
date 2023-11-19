@@ -69,20 +69,18 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile']
+            storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
-
         }
     }
 
     buildTypes {
         release {
             // commented for github actions signing
-            //signingConfig signingConfigs.release
-            ndk {
+//            signingConfig signingConfigs.release
+//            ndk {
 //                debugSymbolLevel 'SYMBOL_TABLE'
-                debugSymbolLevel 'FULL'
-            }
+//            }
         }
     }
 }
