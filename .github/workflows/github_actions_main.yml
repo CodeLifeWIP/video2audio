@@ -48,7 +48,7 @@ jobs:
           mappingFile: ./build/app/outputs/mapping/release/mapping.txt
           debugSymbols: app/intermediates/merged_native_libs/release/out/lib
           changesNotSentForReview: true
-          track: open
+          track: beta
 
 #      - run: flutter pub get
 #      - name: Build .aab
