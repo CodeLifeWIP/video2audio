@@ -35,7 +35,7 @@ jobs:
           name: signed-app-bundle
           path: ${{steps.signed_aab.outputs.signedReleaseFile}}
       - name: Upload to Play Store (Internal Testing)
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.18
         with:
           serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
           packageName: com.mangotechnologies.video_to_audio
