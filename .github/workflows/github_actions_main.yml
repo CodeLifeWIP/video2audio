@@ -46,7 +46,7 @@ jobs:
           packageName: com.mangotechnologies.video_to_audio
           releaseFiles: ${{steps.signed_aab.outputs.signedReleaseFile}}
           mappingFile: ./build/app/outputs/mapping/release/mapping.txt
-          debugSymbols: ./build/app/outputs/symbols
+          debugSymbols: ./build/app/outputs/symbols/
           changesNotSentForReview: true
           track: internal
 
