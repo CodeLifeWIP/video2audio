@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: debug-symbols
-          path: ${{steps.signed_aab.outputs.symbols}}
+          path: build/app/outputs/symbols
 #      - name: Upload to Play Store (Internal Testing)
 #        uses: r0adkll/upload-google-play@v1.0.18
 #        with:
