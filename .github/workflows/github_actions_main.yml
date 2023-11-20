@@ -2,26 +2,75 @@
 name: first-test
 
 # The event that triggers the workflow
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   analysis:
     # The name of the job
     name: example
     runs-on: ubuntu-latest
-#    steps:
-#      - name: Echo Folder Contents
-#        run: echo $(ls)
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          distribution: 'zulu'
-          java-version: '11'
-      - uses: subosito/flutter-action@v2
+          flutter-version: '3.13.9'
+      - name: Get Flutter Resources
+        run: flutter pub get
+      - name: Build App Bundle
+        run: flutter build appbundle --split-debug-info=build/app/outputs/symbols
+      - name: Sign App Bundle
+        uses: r0adkll/sign-android-release@v1
+        id: signed_aab
         with:
-          flutter-version: '3.7.7'
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+          releaseDirectory: build/app/outputs/bundle/release/
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Upload Signed App Bundle to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: signed-app-bundle
+          path: ${{steps.signed_aab.outputs.signedReleaseFile}}
+      #      - name: Upload Debug Symbols
+      #        uses: actions/upload-artifact@v3
+      #        with:
+      #          name: debug-symbols
+      #          path: build/app/outputs/symbols
+      - name: Upload to Play Store (Internal Testing)
+        uses: r0adkll/upload-google-play@v1.0.18
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
+          packageName: com.mangotechnologies.video_to_audio
+          releaseFiles: ${{steps.signed_aab.outputs.signedReleaseFile}}
+          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
+          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
+          #          changesNotSentForReview: true
+          track: beta
+
+#      - run: flutter pub get
+#      - name: Build .aab
+#        run: flutter build appbundle
+#        env:
+#          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+#      - name: Decode Keystore
+#        id: decode_keystore
+#        uses: timheuer/base64-to-file@v1.2
+#        with:
+#          fileName: 'upload-keystore.jks'
+#          fileDir: '/home/runner/work/video2audio/video2audio/android/app/keystore/'
+#          encodedString: ${{ secrets.KEYSTORE }}
+#      - name: 'Check File Existence'
+#        uses: thebinaryfelix/check-file-existence-action@1.0.0
+#        with:
+#          files: 'upload-keystore.jks'
+#      - name: 'Check File Existence'
+#        uses: thebinaryfelix/check-file-existence-action@1.0.0
+#        with:
+#          files: '/home/runner/work/video2audio/video2audio/build/app/outputs/bundle/release/app-release.aab'
