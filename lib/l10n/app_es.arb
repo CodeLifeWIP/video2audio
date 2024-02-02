@@ -1,0 +1,10 @@
+{
+    "title_language": "Idioma",
+    "language": "Español",
+    "app_title": "Descargador de vídeo a audio",
+    "greetings": "Bienvenido",
+    "messages": "Convierte tu vídeo en audio",
+    "hint_link": "El enlace va aquí.",
+    "settings": "Ajustes",
+    "save_directory": "Guardar en directorio"
+}

@@ -9,6 +9,7 @@ import 'package:video_to_audio/core/presentation/widgets/custom_scaffold.dart';
 import 'package:video_to_audio/core/presentation/widgets/loading_popup.dart';
 import 'package:video_to_audio/core/presentation/widgets/spacers/horizontal_spacers.dart';
 import 'package:video_to_audio/modules/settings/presentation/bloc/setting_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -38,6 +39,8 @@ class _SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
+    Locale myLocale = Localizations.localeOf(context);
+
     return BlocListener<SettingBloc, SettingState>(
       listener: (context, state) {
         if (state is LoadingStart) {
@@ -72,7 +75,7 @@ class _SettingState extends State<Setting> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Settings",
+                  AppLocalizations.of(context)!.settings,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: UIConst.textLight,
                       ),
@@ -81,7 +84,17 @@ class _SettingState extends State<Setting> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Save to Directory: ",
+                    "${AppLocalizations.of(context)!.title_language}:  ${AppLocalizations.of(context)!.language}",
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: UIConst.textLight,
+                    ),
+                  ),
+                ),
+                const HorizontalSpacer16(),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    AppLocalizations.of(context)!.save_directory,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: UIConst.textLight,
                         ),
@@ -143,6 +156,9 @@ class _SettingState extends State<Setting> {
       ),
     );
   }
+
+
+
 
   void _chooseDirectory() async {
     context.read<SettingBloc>().add(OnChooseDirectory());

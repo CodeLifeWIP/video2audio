@@ -165,7 +165,7 @@ class _VideoCardState extends State<VideoCard> {
     }
 
     return Text(
-      displaySize!,
+      displaySize,
       style: TextStyle(color: UIConst.textLight),
     );
   }

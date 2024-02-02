@@ -12,11 +12,10 @@ import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.da
 import 'package:video_to_audio/modules/settings/presentation/bloc/setting_bloc.dart' as setting;
 import 'package:video_to_audio/modules/settings/presentation/screens/setting.dart';
 
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GetUrlData extends StatefulWidget {
   const GetUrlData({Key? key}) : super(key: key);
-
   @override
   State<GetUrlData> createState() => _GetUrlDataState();
 }
@@ -123,14 +122,14 @@ class _GetUrlDataState extends State<GetUrlData> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Welcome",
+            AppLocalizations.of(context)!.greetings,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: UIConst.textLight,
                 ),
           ),
           const HorizontalSpacer16(),
           Text(
-            "Turn your video into audio",
+            AppLocalizations.of(context)!.messages,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: UIConst.textLight,
@@ -142,7 +141,7 @@ class _GetUrlDataState extends State<GetUrlData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: UIConst.textLight,
-              hintText: "Link goes here",
+              hintText: AppLocalizations.of(context)!.hint_link,
               hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: UIConst.textMid,
                   ),

@@ -3,11 +3,13 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:video_to_audio/modules/home/presentation/bloc/downloader_bloc.dart';
 import 'package:video_to_audio/modules/home/presentation/screens/home.dart';
 import 'package:video_to_audio/modules/settings/presentation/bloc/setting_bloc.dart';
 import 'core/injection.dart' as di;
 import 'firebase_options.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +57,13 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
               home: const Home(),
             ),
           ),
