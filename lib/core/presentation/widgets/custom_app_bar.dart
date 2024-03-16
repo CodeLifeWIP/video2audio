@@ -7,8 +7,10 @@ enum LeadingIconType { main, sub }
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final LeadingIconType leadingIcon;
+  final VoidCallback onPressed;
 
-  const CustomAppBar({super.key, required this.leadingIcon});
+
+  const CustomAppBar({super.key, required this.leadingIcon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: (leadingIcon == LeadingIconType.main)
-          ? Icon(
-              Icons.multitrack_audio_sharp,
-              color: UIConst.textLight,
+          ? IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: UIConst.textLight,
+              ),
+              onPressed: onPressed,
             )
           : IconButton(
               icon: Icon(

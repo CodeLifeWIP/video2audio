@@ -18,6 +18,7 @@ class UIConst {
   // Colors
   static Color primary = Colors.deepPurple.shade900;
   static Color secondary = Colors.deepPurple.shade400;
+  static Color drawerBackground = Colors.deepPurple.shade700;
   static Gradient colorGradientBackground = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
